@@ -1,11 +1,26 @@
 import React from 'react';
 import './Board.scss';
 
+import { Cell } from './Cell';
+
+import { ROWS, COLUMNS } from '../constants/gameConstants';
+
 export function Board(props) {
-  console.log('board: ', props.board);
+  const board = props.board;
+
   return(
-    <div 
-      className="board">
-      board
+    <div
+      className="board"
+      style={
+        {
+          gridTemplateRows: `repeat(${ROWS}, calc(25vw / ${COLUMNS}))`,
+          gridTemplateColumns: `repeat(${COLUMNS}, 1fr)`,
+        }
+      }>
+        {
+          board.map((row, i) => 
+            row.map((cell, j) => <Cell />)
+          )
+        }
     </div>);
 }
