@@ -8,14 +8,15 @@ export function Cell(props) {
   
   const style = cellInfo.hasMine ? {
     backgroundImage: `url(${mineImg})`
-  } : {}
+  } : {};
 
   return(
     <div className="cell">
       <div
         className="cell_content"
-        style={style}
-      />
+        style={style}>
+      {cellInfo.numMinesAround && !cellInfo.hasMine ? cellInfo.numMinesAround : ''}
+      </div>
     </div>
   );
 }

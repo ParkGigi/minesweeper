@@ -53,7 +53,58 @@ function Game() {
         rowIndex++;
       }
     }
-    setBoard(tempBoard);
+    //setBoard(tempBoard);
+    populateNumber(tempBoard)
+  }
+
+  function populateNumber(prevBoard) {
+    for(let i=0; i <prevBoard.length; i++) {
+      for(let j=0; j<prevBoard[i].length; j++) {
+        let placesToCheck = ['topLeft', 'top', 'topRight', 'left', 'right', 'bottomLeft', 'bottom', 'bottomRight'];
+        
+        if(i === 0) {
+          placesToCheck = getRidOf(placesToCheck, ['topLeft', 'top', 'topRight']);
+        }
+        
+        if(j === 0) { 
+          placesToCheck = getRidOf(placesToCheck, ['topLeft', 'left', 'bottomLeft']);
+        }
+
+        if(i === prevBoard.length - 1) {
+          placesToCheck = getRidOf(placesToCheck, ['bottomLeft', 'bottom', 'bottomRight']);
+        }
+
+        if(j === prevBoard[i].length - 1) {
+          placesToCheck = getRidOf(placesToCheck, ['topRight', 'right', 'bottomRight']);
+        }
+
+        let numberOfMinesAroundCell = 0;
+        
+        for(let k=0; k < placesToCheck.length; k++) {
+          const currentPosition = placesToCheck[k];
+          
+          if ((currentPosition === 'topLeft' && prevBoard[i - 1][j - 1].hasMine) ||
+              (currentPosition === 'top' && prevBoard[i -1][j].hasMine) ||
+              (currentPosition === 'topRight' && prevBoard[i - 1][j + 1].hasMine) ||
+              (currentPosition === 'left' && prevBoard[i][j-1].hasMine) ||
+              (currentPosition === 'right' && prevBoard[i][j+1].hasMine) ||
+              (currentPosition === 'bottomLeft' && prevBoard[i+1][j-1].hasMine) ||
+              (currentPosition === 'bottom' && prevBoard[i+1][j].hasMine) ||
+              (currentPosition === 'bottomRight' && prevBoard[i+1][j+1].hasMine)
+          ) {
+            numberOfMinesAroundCell++;
+          }
+        }
+
+        prevBoard[i][j].numMinesAround = numberOfMinesAroundCell;
+      }
+    }
+
+    setBoard(prevBoard);
+
+    function getRidOf(originalArray, toEraseArray) {
+      return originalArray.filter(element => !toEraseArray.includes(element));
+    }
   }
 
   return(
