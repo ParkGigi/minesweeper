@@ -1,6 +1,12 @@
 .board {
   display: grid;
   width: 100%;
+  margin: 0 auto;
+  margin-top: 100px;
   max-width: 25vw;
-  background-color: gray;
+  background-color: #c4c4c4;
+  border-left: 2px solid gray;
+  border-top: 2px solid gray;
+  border-right: 2px solid #f2f2f2;
+  border-bottom: 2px solid #f2f2f2;
 }

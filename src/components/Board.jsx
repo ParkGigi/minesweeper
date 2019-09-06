@@ -19,7 +19,7 @@ export function Board(props) {
       }>
         {
           board.map((row, i) => 
-            row.map((cell, j) => <Cell />)
+            row.map((cell, j) => <Cell cellInfo={cell} key={[i, j]}/>)
           )
         }
     </div>);

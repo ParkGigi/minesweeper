@@ -33,9 +33,15 @@ function Game() {
 
     while(numInjectedMines < NUM_MINE) {
       for(let i=0; i < emptyBoard[rowIndex].length; i++) {
+        if(numInjectedMines === NUM_MINE) {
+          break;
+        }
+
         const shouldInjectMine = Math.floor(Math.random() * Math.floor(Object.keys(InjectMineEnum).length));
 
-        if(shouldInjectMine === InjectMineEnum.INJECT && tempBoard[rowIndex][i].hasMine === false) {
+        if(shouldInjectMine === InjectMineEnum.INJECT && 
+          tempBoard[rowIndex][i].hasMine === false
+          ) {
           tempBoard[rowIndex][i].hasMine = true;
           numInjectedMines++;
         }
@@ -51,7 +57,7 @@ function Game() {
   }
 
   return(
-    <div>
+    <div className="game">
       <Board board={board}/>
     </div>
   );
