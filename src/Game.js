@@ -3,7 +3,7 @@ import './Game.css';
 
 const HEIGHT = 5;
 const WIDTH = 2;
-const NUM_MINE = 5;
+const NUM_MINE = 8;
 
 function Game() {
   const [board, setBoard] = useState([]);
@@ -22,14 +22,22 @@ function Game() {
       let numInjectedMines = 0;
       let tempBoard = JSON.parse(JSON.stringify(initialBoard));
 
-      for(let i=0; i < initialBoard.length; i++) {
-        for(let j=0; j < initialBoard[i].length; j++) {
-          const shoudInjectMine = Math.floor(Math.random() * Math.floor(2));
+      let rowIndex = 0;
 
-          if (shoudInjectMine === 1 && numInjectedMines < NUM_MINE) {
-            tempBoard[i][j].hasMine = true;
-            numInjectedMines = numInjectedMines + 1;
+      while(numInjectedMines < NUM_MINE) {
+        for(let i=0; i < initialBoard[rowIndex].length; i++) {
+          const shouldInjectMine = Math.floor(Math.random() * Math.floor(2));
+
+          if(shouldInjectMine === 1 && tempBoard[rowIndex][i].hasMine === false) {
+            tempBoard[rowIndex][i].hasMine = true;
+            numInjectedMines++;
           }
+        }
+        
+        if (rowIndex === initialBoard.length - 1) {
+          rowIndex = 0;
+        } else {
+          rowIndex++;
         }
       }
       setBoard(tempBoard);
