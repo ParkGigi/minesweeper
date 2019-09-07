@@ -18,7 +18,16 @@ export function Board(props) {
       }>
         {
           board.map((row, i) => 
-            row.map((cell, j) => <Cell cellInfo={cell} key={[i, j]}/>)
+            row.map((cell, j) => <Cell 
+              cellInfo={
+                {
+                  ...cell,
+                  row: i,
+                  column: j
+                }
+              }
+              key={[i, j]}
+              dispatchBoardAction={props.dispatchBoardAction}/>)
           )
         }
     </div>);
