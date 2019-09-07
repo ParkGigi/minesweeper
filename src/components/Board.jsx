@@ -7,7 +7,6 @@ import { ROWS, COLUMNS } from '../constants/gameConstants';
 
 export function Board(props) {
   const board = props.board;
-
   return(
     <div
       className="board"

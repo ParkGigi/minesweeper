@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './Cell.scss';
 import mineImg from '../assets/img/mine.png';
 
 export function Cell(props) {
-  const { cellInfo } = props;
+  let { hasMine, isUncovered, numMinesAround } = props.cellInfo;
+  let [uncovered, setUncovered] = useState(isUncovered);
   
-  const style = cellInfo.hasMine ? {
+  
+  const style = (hasMine && uncovered) ? {
     backgroundImage: `url(${mineImg})`
   } : {};
 
+  function onCellClick() {
+    setUncovered(true);
+    console.log('isUncovered: ', isUncovered);
+  }
+
   return(
-    <div className="cell">
+    <div 
+      className="cell"
+      onClick={onCellClick}
+    >
       <div
         className="cell_content"
         style={style}>
-      {cellInfo.numMinesAround && !cellInfo.hasMine ? cellInfo.numMinesAround : ''}
+      {(numMinesAround && !hasMine && uncovered) ? numMinesAround : ''}
       </div>
     </div>
   );

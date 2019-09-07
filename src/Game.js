@@ -1,16 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import './Game.css';
 
 import { Board } from './components/Board';
 
 import { ROWS, COLUMNS, NUM_MINE, InjectMineEnum } from './constants/gameConstants';
 
+
 function Game() {
   const [board, setBoard] = useState([]);
 
   useEffect(() => {
-    populateMines();
+    // Use useCallback();
+    function restartGame() {
+      let emptyBoard = initiateEmptyBoard();
+      let boardWithMines = populateMines(emptyBoard);
+      setBoard(populateNumber(boardWithMines));
+    }
+    restartGame();
   }, []);
+
+  // function restartGame() {
+  //   let emptyBoard = initiateEmptyBoard();
+  //   let boardWithMines = populateMines(emptyBoard);
+  //   setBoard(populateNumber(boardWithMines));
+  // }
 
   function initiateEmptyBoard() {
     return Array.from(
@@ -23,9 +36,7 @@ function Game() {
       );
   }
 
-  function populateMines() {
-    let emptyBoard = initiateEmptyBoard();
-
+  function populateMines(emptyBoard) {
     let numInjectedMines = 0;
     let tempBoard = JSON.parse(JSON.stringify(emptyBoard));
 
@@ -54,7 +65,8 @@ function Game() {
       }
     }
     //setBoard(tempBoard);
-    populateNumber(tempBoard)
+    //populateNumber(tempBoard)
+    return tempBoard;
   }
 
   function populateNumber(prevBoard) {
@@ -100,7 +112,7 @@ function Game() {
       }
     }
 
-    setBoard(prevBoard);
+    return prevBoard;
 
     function getRidOf(originalArray, toEraseArray) {
       return originalArray.filter(element => !toEraseArray.includes(element));
