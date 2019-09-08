@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+
+import { BoardActions } from '../actions/BoardActions';
+import { dispatchContext } from '../Game';
 
 import './Cell.scss';
 import mineImg from '../assets/img/mine.png';
 
 export function Cell(props) {
+  const dispatch = useContext(dispatchContext);
   let { hasMine, isUncovered, numMinesAround, row, column } = props.cellInfo;
   
   const style = (hasMine && isUncovered) ? {
@@ -11,8 +15,7 @@ export function Cell(props) {
   } : {};
 
   function onCellClick() {
-    props.dispatchBoardAction({ type: 'UNCOVER_CELL', payload: {row: row, column: column} });
-    console.log('isUncovered: ', isUncovered);
+    dispatch({ type: BoardActions.UNCOVER_CELL, payload: {row: row, column: column} });
   }
 
   return(

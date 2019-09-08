@@ -1,17 +1,21 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import './Board.scss';
 
 import { Cell } from './Cell';
 
-import { boardReducer } from '../reducers/boardReducer';
+import { stateContext, dispatchContext } from '../Game';
+import { BoardActions } from '../actions/BoardActions';
+
 import { ROWS, COLUMNS } from '../constants/gameConstants';
 
 export function Board() {
-  const [state, dispatch] = useReducer(boardReducer, { board: [] });
+  //const [state, dispatch] = useReducer(boardReducer, { board: [] });
+  const state = useContext(stateContext);
+  const dispatch = useContext(dispatchContext);
   
   useEffect(() => {
-    dispatch({ type: 'INITIATE_BOARD' });
-  }, [])
+    dispatch({ type: BoardActions.INITIATE_BOARD });
+  }, [dispatch])
 
   return(
     <div
@@ -32,8 +36,7 @@ export function Board() {
                   column: j
                 }
               }
-              key={[i, j]}
-              dispatchBoardAction={dispatch}/>)
+              key={[i, j]}/>)
           )
         }
     </div>);

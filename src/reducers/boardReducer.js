@@ -1,14 +1,16 @@
 import { ROWS, COLUMNS, NUM_MINE, InjectMineEnum } from '../constants/gameConstants';
 
+import { BoardActions } from '../actions/BoardActions';
+
 export function boardReducer (state, action) {
   switch(action.type) {
-    case 'INITIATE_BOARD':
+    case BoardActions.INITIATE_BOARD:
       return {
         ...state,
         board: restartGame()
       };
     
-    case 'UNCOVER_CELL':
+    case BoardActions.UNCOVER_CELL:
       return {
         ...state,
         board: uncoverCell(state.board, action.payload.row, action.payload.column),
