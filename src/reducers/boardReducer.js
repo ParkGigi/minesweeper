@@ -1,4 +1,4 @@
-import { ROWS, COLUMNS, NUM_MINE, InjectMineEnum } from '../constants/gameConstants';
+import { InjectMineEnum } from '../constants/gameConstants';
 
 import { BoardActions } from '../actions/BoardActions';
 
@@ -7,7 +7,7 @@ export function boardReducer (state, action) {
     case BoardActions.INITIATE_BOARD:
       return {
         ...state,
-        board: restartGame()
+        board: restartGame(action.payload.level)
       };
     
     case BoardActions.UNCOVER_CELL:
@@ -16,15 +16,22 @@ export function boardReducer (state, action) {
         board: uncoverCell(state.board, action.payload.row, action.payload.column),
       }
 
+    case BoardActions.CHANGE_LEVEL:
+      return {
+        ...state,
+        level: action.payload.level,
+        board: restartGame(action.payload.level),
+      }
+
     default:
       throw new Error('No matching action type in reducer');
   }
 }
 
-function initiateEmptyBoard() {
+function initiateEmptyBoard({ rows, columns, num_mine }) {
   return Array.from(
-    Array(ROWS), () =>
-    new Array(COLUMNS).fill({
+    Array(rows), () =>
+    new Array(columns).fill({
       hasMine: false,
       isUncovered: false,
       numMinesAround: 0,
@@ -32,15 +39,15 @@ function initiateEmptyBoard() {
     );
 }
 
-function populateMines(emptyBoard) {
+function populateMines(emptyBoard, numMine) {
   let numInjectedMines = 0;
   let tempBoard = JSON.parse(JSON.stringify(emptyBoard));
 
   let rowIndex = 0;
 
-  while(numInjectedMines < NUM_MINE) {
+  while(numInjectedMines < numMine) {
     for(let i=0; i < emptyBoard[rowIndex].length; i++) {
-      if(numInjectedMines === NUM_MINE) {
+      if(numInjectedMines === numMine) {
         break;
       }
 
@@ -113,9 +120,9 @@ function populateNumber(prevBoard) {
   }
 }
 
-function restartGame() {
-  let emptyBoard = initiateEmptyBoard();
-  let boardWithMines = populateMines(emptyBoard);
+function restartGame(level) {
+  let emptyBoard = initiateEmptyBoard(level);
+  let boardWithMines = populateMines(emptyBoard, level.num_mine);
   return populateNumber(boardWithMines);
 }
 

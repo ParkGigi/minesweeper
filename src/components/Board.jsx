@@ -6,15 +6,14 @@ import { Cell } from './Cell';
 import { stateContext, dispatchContext } from '../Game';
 import { BoardActions } from '../actions/BoardActions';
 
-import { ROWS, COLUMNS } from '../constants/gameConstants';
+import { GameLevel } from '../constants/gameConstants';
 
 export function Board() {
-  //const [state, dispatch] = useReducer(boardReducer, { board: [] });
   const state = useContext(stateContext);
   const dispatch = useContext(dispatchContext);
   
   useEffect(() => {
-    dispatch({ type: BoardActions.INITIATE_BOARD });
+    dispatch({ type: BoardActions.INITIATE_BOARD, payload: { level: GameLevel.INTERMEDIATE } });
   }, [dispatch])
 
   return(
@@ -22,8 +21,8 @@ export function Board() {
       className="board"
       style={
         {
-          gridTemplateRows: `repeat(${ROWS}, calc(25vw / ${COLUMNS}))`,
-          gridTemplateColumns: `repeat(${COLUMNS}, 1fr)`,
+          gridTemplateRows: `repeat(${state.level.rows}, 22px)`,
+          gridTemplateColumns: `repeat(${state.level.columns}, 22px)`,
         }
       }>
         {

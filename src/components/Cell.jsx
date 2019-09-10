@@ -20,7 +20,7 @@ export function Cell(props) {
 
   return(
     <div 
-      className="cell"
+      className={`cell ${isUncovered ? 'uncovered' : ''}`}
       onClick={onCellClick}
     >
       <div
