@@ -51,7 +51,7 @@ function populateMines(emptyBoard, numMine) {
         break;
       }
 
-      const shouldInjectMine = Math.floor(Math.random() * Math.floor(Object.keys(InjectMineEnum).length));
+      const shouldInjectMine = Math.floor(Math.random() * Math.floor(10));
 
       if(shouldInjectMine === InjectMineEnum.INJECT && 
         tempBoard[rowIndex][i].hasMine === false
