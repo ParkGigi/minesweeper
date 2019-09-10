@@ -14,14 +14,20 @@ export function boardReducer (state, action) {
       return {
         ...state,
         board: uncoverCell(state.board, action.payload.row, action.payload.column),
-      }
+      };
+
+    case BoardActions.RIGHT_CLICK_CELL:
+      return {
+        ...state,
+        board: toggleFlagCell(state.board, action.payload.row, action.payload.column),
+      };
 
     case BoardActions.CHANGE_LEVEL:
       return {
         ...state,
         level: action.payload.level,
         board: restartGame(action.payload.level),
-      }
+      };
 
     default:
       throw new Error('No matching action type in reducer');
@@ -35,6 +41,7 @@ function initiateEmptyBoard({ rows, columns, num_mine }) {
       hasMine: false,
       isUncovered: false,
       numMinesAround: 0,
+      flagged: false,
     })
     );
 }
@@ -130,4 +137,10 @@ function uncoverCell(originalBoard, row, column) {
   const newBoard = JSON.parse(JSON.stringify(originalBoard));
   newBoard[row][column].isUncovered = true;
   return newBoard;
+}
+
+function toggleFlagCell(originalBoard, row, column) {
+  const newBoard = JSON.parse(JSON.stringify(originalBoard));
+  newBoard[row][column].flagged = !newBoard[row][column].flagged;
+  return newBoard
 }

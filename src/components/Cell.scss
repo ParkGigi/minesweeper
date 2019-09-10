@@ -10,10 +10,52 @@
     width: 100%;
     height: 100%;
     text-align: center;
+    font-weight: bold;
+    
+    &._1 {
+      color: #3BB273;
+    }
+
+    &._2 {
+      color: #4D9DE0;
+    }
+
+    &._3 {
+      color: #ff9f00;
+    }
+
+    &._4 {
+      color: #7768AE;
+    }
+
+    &._5 {
+      color: #70C1B3;
+    }
+
+    &._6 {
+      color: #247BA0;
+    }
+
+    &._7 {
+      color: #274690;
+    }
+
+    &._8 {
+      color: #FF1654;
+    }
+
+  }
+
+  .mine {
+    background-image: url('../assets/img/mine.png');
+  }
+
+  .flagged {
+    background-image: url('../assets/img/fire.png');
   }
 
   &.uncovered {
     border: 0.5px solid gray;
-    background-color: darkgray;
+    background-color: #eee;
   }
 }

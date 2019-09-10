@@ -8,24 +8,32 @@ import mineImg from '../assets/img/mine.png';
 
 export function Cell(props) {
   const dispatch = useContext(dispatchContext);
-  let { hasMine, isUncovered, numMinesAround, row, column } = props.cellInfo;
+  let { hasMine, isUncovered, numMinesAround, row, column, flagged } = props.cellInfo;
   
-  const style = (hasMine && isUncovered) ? {
-    backgroundImage: `url(${mineImg})`
-  } : {};
-
   function onCellClick() {
+    if(flagged) return;
     dispatch({ type: BoardActions.UNCOVER_CELL, payload: {row: row, column: column} });
+  }
+
+  function onCellRightClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch({ type: BoardActions.RIGHT_CLICK_CELL, payload: { row, column }});
+    return false;
   }
 
   return(
     <div 
       className={`cell ${isUncovered ? 'uncovered' : ''}`}
       onClick={onCellClick}
+      onContextMenu={(e) => onCellRightClick(e)}
     >
       <div
-        className="cell_content"
-        style={style}>
+        className={`
+          cell_content _${numMinesAround} 
+          ${hasMine && isUncovered ? 'mine' : ''} 
+          ${flagged ? 'flagged' : ''}`}
+      >
       {(numMinesAround && !hasMine && isUncovered) ? numMinesAround : ''}
       </div>
     </div>
