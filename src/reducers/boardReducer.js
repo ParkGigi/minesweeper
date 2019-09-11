@@ -16,6 +16,12 @@ export function boardReducer (state, action) {
         board: uncoverCell(state.board, action.payload.row, action.payload.column),
       };
 
+    case BoardActions.DOUBLE_CLICK_CELL:
+      return {
+        ...state,
+        board: uncoverAdjacentCells(state.board, action.payload.row, action.payload.column),
+      };
+
     case BoardActions.RIGHT_CLICK_CELL:
       return {
         ...state,
@@ -28,7 +34,7 @@ export function boardReducer (state, action) {
         level: action.payload.level,
         board: restartGame(action.payload.level),
       };
-
+    
     default:
       throw new Error('No matching action type in reducer');
   }
@@ -143,4 +149,36 @@ function toggleFlagCell(originalBoard, row, column) {
   const newBoard = JSON.parse(JSON.stringify(originalBoard));
   newBoard[row][column].flagged = !newBoard[row][column].flagged;
   return newBoard
+}
+
+function uncoverAdjacentCells(originalBoard, row, column) {
+  const newBoard = JSON.parse(JSON.stringify(originalBoard));
+  
+  if (row > 0) {
+    // cell above
+    newBoard[row - 1][column].isUncovered = true;
+
+    // cell topLeft
+    if (column > 0) newBoard[row - 1][column - 1].isUncovered = true;
+    // cell topRight
+    if (column < newBoard[0].length - 1) newBoard[row - 1][column + 1].isUncovered = true;
+
+  }
+
+  // cell left
+  if (column > 0) newBoard[row][column - 1].isUncovered = true;
+  // cell right
+  if (column < originalBoard[0].length - 1) newBoard[row][column + 1].isUncovered = true;
+
+  if (row < newBoard.length - 1) {
+    // cell below
+    newBoard[row + 1][column].isUncovered = true;
+    
+    // cell bottom Left
+    if (column > 0) newBoard[row + 1][column - 1].isUncovered = true;
+    // cell bottomRight
+    if (column < newBoard[0].length - 1) newBoard[row + 1][column + 1].isUncovered = true;
+  }
+
+  return newBoard;
 }

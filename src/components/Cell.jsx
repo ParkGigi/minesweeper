@@ -12,7 +12,11 @@ export function Cell(props) {
   
   function onCellClick() {
     if(flagged) return;
-    dispatch({ type: BoardActions.UNCOVER_CELL, payload: {row: row, column: column} });
+    dispatch({ type: BoardActions.UNCOVER_CELL, payload: { row, column } });
+  }
+
+  function onCellDoubleClick() {
+    dispatch({ type: BoardActions.DOUBLE_CLICK_CELL, payload: { row, column }})
   }
 
   function onCellRightClick(e) {
@@ -26,6 +30,7 @@ export function Cell(props) {
     <div 
       className={`cell ${isUncovered ? 'uncovered' : ''}`}
       onClick={onCellClick}
+      onDoubleClick={onCellDoubleClick}
       onContextMenu={(e) => onCellRightClick(e)}
     >
       <div
