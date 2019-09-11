@@ -5,14 +5,14 @@ import { Board } from './components/Board';
 
 import { boardReducer } from './reducers/boardReducer';
 import { BoardActions } from './actions/BoardActions';
-import { GameLevel } from './constants/gameConstants';
+import { GameLevel, GameInitialState } from './constants/gameConstants';
 
 export const stateContext = React.createContext();
 export const dispatchContext = React.createContext();
 
 
 function Game() {
-  const [state, dispatch] = useReducer(boardReducer, { board: [], level: GameLevel.INTERMEDIATE });
+  const [state, dispatch] = useReducer(boardReducer, GameInitialState);
 
   function onResetClick() {
     dispatch({ type: BoardActions.INITIATE_BOARD, payload: { level: state.level } });
@@ -26,6 +26,7 @@ function Game() {
     <stateContext.Provider value={state}>
       <dispatchContext.Provider value={dispatch}>
         <div className="game">
+          {state.gameOver ? 'Game Over!!' : ''}
           <Board />
           <button onClick={onResetClick}>Restart</button>
           <select

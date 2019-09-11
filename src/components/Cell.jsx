@@ -1,25 +1,32 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { BoardActions } from '../actions/BoardActions';
-import { dispatchContext } from '../Game';
+import { dispatchContext, stateContext } from '../Game';
 
 import './Cell.scss';
 import mineImg from '../assets/img/mine.png';
 
 export function Cell(props) {
   const dispatch = useContext(dispatchContext);
+  const { gameOver } = useContext(stateContext);
   let { hasMine, isUncovered, numMinesAround, row, column, flagged } = props.cellInfo;
   
+  useEffect(() => {
+    if(isUncovered && hasMine) dispatch({ type: BoardActions.GAME_OVER });
+  }, [isUncovered, dispatch, hasMine])
+
   function onCellClick() {
-    if(flagged) return;
+    if (flagged || gameOver) return;
     dispatch({ type: BoardActions.UNCOVER_CELL, payload: { row, column } });
   }
 
   function onCellDoubleClick() {
+    if (gameOver) return;
     dispatch({ type: BoardActions.DOUBLE_CLICK_CELL, payload: { row, column }})
   }
 
   function onCellRightClick(e) {
+    if (gameOver) return;
     e.preventDefault();
     e.stopPropagation();
     dispatch({ type: BoardActions.RIGHT_CLICK_CELL, payload: { row, column }});

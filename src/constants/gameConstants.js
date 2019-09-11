@@ -21,6 +21,12 @@ export const GameLevel = Object.freeze({
   }
 })
 
+export const GameInitialState = {
+  board: [],
+  level: GameLevel.INTERMEDIATE,
+  gameOver: false
+};
+
 export const InjectMineEnum = Object.freeze({
   DO_NOT_INJECT: 0,
   INJECT: 1
