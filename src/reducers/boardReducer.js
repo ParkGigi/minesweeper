@@ -7,6 +7,7 @@ export function boardReducer (state, action) {
     case BoardActions.INITIATE_BOARD:
       return {
         ...state,
+        gameOver: false,
         board: restartGame(action.payload.level)
       };
     
@@ -35,6 +36,12 @@ export function boardReducer (state, action) {
         board: restartGame(action.payload.level),
       };
     
+    case BoardActions.GAME_OVER:
+      return {
+        ...state,
+        gameOver: true,
+      };
+
     default:
       throw new Error('No matching action type in reducer');
   }
