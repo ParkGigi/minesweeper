@@ -161,30 +161,34 @@ function toggleFlagCell(originalBoard, row, column) {
 function uncoverAdjacentCells(originalBoard, row, column) {
   const newBoard = JSON.parse(JSON.stringify(originalBoard));
   
+  function ifNotFlaggedUncover(cell) {
+    cell.isUncovered = cell.flagged ? false : true;
+  }
+
   if (row > 0) {
     // cell above
-    newBoard[row - 1][column].isUncovered = true;
+    ifNotFlaggedUncover(newBoard[row - 1][column]);
 
     // cell topLeft
-    if (column > 0) newBoard[row - 1][column - 1].isUncovered = true;
+    if (column > 0) ifNotFlaggedUncover(newBoard[row - 1][column - 1]);
     // cell topRight
-    if (column < newBoard[0].length - 1) newBoard[row - 1][column + 1].isUncovered = true;
+    if (column < newBoard[0].length - 1) ifNotFlaggedUncover(newBoard[row - 1][column + 1]);
 
   }
 
   // cell left
-  if (column > 0) newBoard[row][column - 1].isUncovered = true;
+  if (column > 0) ifNotFlaggedUncover(newBoard[row][column - 1]);
   // cell right
-  if (column < originalBoard[0].length - 1) newBoard[row][column + 1].isUncovered = true;
+  if (column < originalBoard[0].length - 1) ifNotFlaggedUncover(newBoard[row][column + 1]);
 
   if (row < newBoard.length - 1) {
     // cell below
-    newBoard[row + 1][column].isUncovered = true;
+    ifNotFlaggedUncover(newBoard[row + 1][column]);
     
     // cell bottom Left
-    if (column > 0) newBoard[row + 1][column - 1].isUncovered = true;
+    if (column > 0) ifNotFlaggedUncover(newBoard[row + 1][column - 1])
     // cell bottomRight
-    if (column < newBoard[0].length - 1) newBoard[row + 1][column + 1].isUncovered = true;
+    if (column < newBoard[0].length - 1) ifNotFlaggedUncover(newBoard[row + 1][column + 1]);
   }
 
   return newBoard;
