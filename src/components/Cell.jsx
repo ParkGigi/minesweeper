@@ -26,9 +26,9 @@ export function Cell(props) {
   }
 
   function onCellRightClick(e) {
-    if (gameOver) return;
     e.preventDefault();
     e.stopPropagation();
+    if (gameOver || isUncovered) return;
     dispatch({ type: BoardActions.RIGHT_CLICK_CELL, payload: { row, column }});
     return false;
   }

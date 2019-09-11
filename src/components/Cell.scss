@@ -58,4 +58,14 @@
     border: 0.5px solid gray;
     background-color: #eee;
   }
+
+  &:hover {
+    cursor: pointer;
+    background-color: darkgray;
+    border: 0.5px solid gray;
+
+    &.uncovered {
+      background-color: #eee;
+    }
+  }
 }
