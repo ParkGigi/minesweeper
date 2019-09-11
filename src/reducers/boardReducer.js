@@ -1,7 +1,7 @@
 import { InjectMineEnum } from '../constants/gameConstants';
 
 import { BoardActions } from '../actions/BoardActions';
-import { checkAdjacentCells } from '../utility/utility';
+import { doSomethingToAdjacentCells, referenceToAdjacentCells } from '../utility/utility';
 
 export function boardReducer (state, action) {
   switch(action.type) {
@@ -94,15 +94,13 @@ function populateMines(emptyBoard, numMine) {
 function populateNumber(prevBoard) {
   for(let i=0; i <prevBoard.length; i++) {
     for(let j=0; j<prevBoard[i].length; j++) {
-      let track = 0;
+      const adjacentCells = referenceToAdjacentCells(prevBoard, i, j);
+      let minesAround = 0;
+      adjacentCells.forEach(cell => {
+        if(cell.hasMine) minesAround++;
+      })
 
-      const keepTrack = (cell) => {
-        if(cell.hasMine) track++;
-      }
-
-      checkAdjacentCells(prevBoard, i, j, keepTrack);
-      console.log('track: ', track);
-      prevBoard[i][j].numMinesAround = track;
+      prevBoard[i][j].numMinesAround = minesAround;
     }
   }
   return prevBoard;
@@ -131,5 +129,5 @@ function uncoverAdjacentCells(originalBoard, row, column) {
     cell.isUncovered = cell.flagged ? false : true;
   }
 
-  return checkAdjacentCells(originalBoard, row, column, ifNotFlaggedUncover);
+  return doSomethingToAdjacentCells(originalBoard, row, column, ifNotFlaggedUncover);
 }

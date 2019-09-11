@@ -4,7 +4,6 @@ import { BoardActions } from '../actions/BoardActions';
 import { dispatchContext, stateContext } from '../Game';
 
 import './Cell.scss';
-import mineImg from '../assets/img/mine.png';
 
 export function Cell(props) {
   const dispatch = useContext(dispatchContext);
