@@ -36,8 +36,13 @@ export function referenceToAdjacentCells(originalBoard, row, column) {
   const surroundingCellIndex = getSurroundingCellIndex(row, column);
 
   for(let [newRow, newColumn] of surroundingCellIndex) {
+
     if (isCell(originalBoard, newRow, newColumn)) {
-      adjacentCells.push(originalBoard[newRow][newColumn]);
+      adjacentCells.push({
+        cell: originalBoard[newRow][newColumn],
+        row: newRow,
+        column: newColumn,
+      });
     }
   }
 

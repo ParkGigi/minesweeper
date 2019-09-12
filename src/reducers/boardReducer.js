@@ -96,13 +96,14 @@ function populateNumber(prevBoard) {
     for(let j=0; j<prevBoard[i].length; j++) {
       const adjacentCells = referenceToAdjacentCells(prevBoard, i, j);
       let minesAround = 0;
-      adjacentCells.forEach(cell => {
+      adjacentCells.forEach(({cell, row, column}) => {
         if(cell.hasMine) minesAround++;
       })
 
       prevBoard[i][j].numMinesAround = minesAround;
     }
   }
+  console.log('prevBoard: ', prevBoard);
   return prevBoard;
 };
 
@@ -125,9 +126,26 @@ function toggleFlagCell(originalBoard, row, column) {
 }
 
 function uncoverAdjacentCells(originalBoard, row, column) {  
-  function ifNotFlaggedUncover(cell) {
-    cell.isUncovered = cell.flagged ? false : true;
+  //const surroundingCells = referenceToAdjacentCells(originalBoard, row, column);
+  const memo = {};
+  const stack = [{ cell: originalBoard[row][column], row, column }];
+
+  while(stack.length > 0) {
+    const centerCell = stack.pop();
+    const surroundingCells = referenceToAdjacentCells(originalBoard, centerCell.row, centerCell.column);
+    
+    for(let cell of surroundingCells) {
+      if(memo[`${cell.row}-${cell.column}`]) continue;
+      else {
+        memo[`${cell.row}-${cell.column}`] = true;
+      }
+      cell.cell.isUncovered = cell.cell.flagged ? false : true;
+
+      if(cell.cell && !cell.cell.numMinesAround && !cell.cell.hasMine) {
+        stack.push(cell);
+      }
+    }
   }
 
-  return doSomethingToAdjacentCells(originalBoard, row, column, ifNotFlaggedUncover);
-}
+  return originalBoard;
+};
