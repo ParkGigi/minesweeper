@@ -1,15 +1,16 @@
 import { InjectMineEnum } from '../constants/gameConstants';
 
 import { BoardActions } from '../actions/BoardActions';
-import { doSomethingToAdjacentCells, referenceToAdjacentCells } from '../utility/utility';
+import { referenceToAdjacentCells } from '../utility/utility';
 
 export function boardReducer (state, action) {
   switch(action.type) {
     case BoardActions.INITIATE_BOARD:
       return {
         ...state,
+        minesLeft: action.payload.level.num_mine,
         gameOver: false,
-        board: restartGame(action.payload.level)
+        board: resetBoard(action.payload.level)
       };
     
     case BoardActions.UNCOVER_CELL:
@@ -27,14 +28,18 @@ export function boardReducer (state, action) {
     case BoardActions.RIGHT_CLICK_CELL:
       return {
         ...state,
+        minesLeft: state.board[action.payload.row][action.payload.column].flagged ? 
+                   state.minesLeft + 1: state.minesLeft - 1,
         board: toggleFlagCell(state.board, action.payload.row, action.payload.column),
       };
 
     case BoardActions.CHANGE_LEVEL:
       return {
         ...state,
+        gameOver: false,
         level: action.payload.level,
-        board: restartGame(action.payload.level),
+        minesLeft: action.payload.level.num_mine,
+        board: resetBoard(action.payload.level),
       };
     
     case BoardActions.GAME_OVER:
@@ -103,11 +108,11 @@ function populateNumber(prevBoard) {
       prevBoard[i][j].numMinesAround = minesAround;
     }
   }
-  console.log('prevBoard: ', prevBoard);
+  console.log(prevBoard);
   return prevBoard;
 };
 
-function restartGame(level) {
+function resetBoard(level) {
   let emptyBoard = initiateEmptyBoard(level);
   let boardWithMines = populateMines(emptyBoard, level.num_mine);
   return populateNumber(boardWithMines);
@@ -125,8 +130,8 @@ function toggleFlagCell(originalBoard, row, column) {
   return newBoard
 }
 
-function uncoverAdjacentCells(originalBoard, row, column) {  
-  //const surroundingCells = referenceToAdjacentCells(originalBoard, row, column);
+function uncoverAdjacentCells(originalBoard, row, column) {
+
   const memo = {};
   const stack = [{ cell: originalBoard[row][column], row, column }];
 
@@ -134,7 +139,14 @@ function uncoverAdjacentCells(originalBoard, row, column) {
     const centerCell = stack.pop();
     const surroundingCells = referenceToAdjacentCells(originalBoard, centerCell.row, centerCell.column);
     
-    for(let cell of surroundingCells) {
+    const flagsInAdjacentCells = surroundingCells.reduce((acc, currCell) => {
+      if(currCell.cell.flagged) return acc + 1;
+      return acc;
+    }, 0);
+
+    if (flagsInAdjacentCells < centerCell.cell.numMinesAround) return originalBoard;
+
+    for (let cell of surroundingCells) {
       if(memo[`${cell.row}-${cell.column}`]) continue;
       else {
         memo[`${cell.row}-${cell.column}`] = true;

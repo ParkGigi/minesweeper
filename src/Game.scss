@@ -1,0 +1,43 @@
+.game {
+  position: relative;
+  width: fit-content;
+  margin: 20px auto;
+  background-color: #c4c4c4;
+  border-left: 2px solid rgb(128, 128, 128);
+  border-top: 2px solid gray;
+  border-right: 2px solid #f2f2f2;
+}
+
+.game_header {
+  display: flex;
+
+  .game_minesLeft {
+    flex: 1;
+  }
+}
+
+@keyframes glideUpAndDown {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: calc(100% - 1em - 6px);
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.gameOver {
+  color: #da0a0a;
+  text-shadow: 4px 4px #558ABB;
+  animation-duration: 5s;
+  animation-name: glideUpAndDown;
+  animation-iteration-count: infinite;
+  transition-timing-function: ease-in;
+  position: absolute;
+  font-size: 50px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+}
