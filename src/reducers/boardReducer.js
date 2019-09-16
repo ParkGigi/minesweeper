@@ -121,6 +121,9 @@ function resetBoard(level) {
 function uncoverCell(originalBoard, row, column) {
   const newBoard = JSON.parse(JSON.stringify(originalBoard));
   newBoard[row][column].isUncovered = true;
+  if(newBoard[row][column].numMinesAround === 0 && !newBoard[row][column].hasMine) {
+    return uncoverAdjacentCells(originalBoard, row, column);
+  }
   return newBoard;
 }
 
