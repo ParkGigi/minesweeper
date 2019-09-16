@@ -10,9 +10,45 @@
 
 .game_header {
   display: flex;
+  padding: 5px;
+  align-items: center;
 
   .game_minesLeft {
     flex: 1;
+    font-weight: 500;
+    color: #f12e2e;
+  }
+
+  .restart {
+    background-color: #c4c4c4;  
+    padding: 3px 5px;
+    border-top: 2px solid #f2f2f2;
+    border-left: 2px solid #f2f2f2;
+    border-right: 2px solid gray;
+    border-bottom: 2px solid gray;
+    margin-right: 5px;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: darkgray;
+      border-top: 2px solid gray;
+      border-left: 2px solid gray;
+      border-right: 2px solid #f2f2f2;
+      border-bottom: 2px solid #f2f2f2;
+    }
+  }
+
+  .levelSelector {
+    background: none;
+    border-radius: 0;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
@@ -21,7 +57,7 @@
     top: 0;
   }
   50% {
-    top: calc(100% - 1em - 6px);
+    top: calc(100% - 2em - 6px);
   }
   100% {
     top: 0;
@@ -39,5 +75,5 @@
   font-size: 50px;
   font-weight: bold;
   width: 100%;
-  text-align: center;
+  text-align: center;  
 }

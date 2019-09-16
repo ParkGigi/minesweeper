@@ -28,8 +28,11 @@ function Game() {
         <div className="game">
           <div className="game_header">
             <div className="game_minesLeft">{state.minesLeft}</div>
-            <button onClick={onResetClick}>Restart</button>
+            <button 
+              className="restart"
+              onClick={onResetClick}>Restart</button>
             <select
+              className="levelSelector"
               value={state.level.name}
               onChange={(e) => onLevelSelect(e)}>
               <option value={GameLevel.EASY.name}>Easy</option>

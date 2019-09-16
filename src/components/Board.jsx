@@ -27,7 +27,9 @@ export function Board() {
       }>
         {
             state.gameOver ? 
-            <div className="gameOver">GAME OVER</div> : ''
+            <div className="gameOver">
+              GAME OVER
+            </div> : ''
           }
         {
           state.board.map((row, i) => 
