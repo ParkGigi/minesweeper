@@ -42,7 +42,7 @@ export function Cell(props) {
       <div
         className={`
           cell_content _${numMinesAround} 
-          ${hasMine && isUncovered ? 'mine' : ''} 
+          ${(hasMine && isUncovered) || (hasMine && gameOver) ? 'mine' : ''} 
           ${flagged ? 'flagged' : ''}`}
       >
       {(numMinesAround && !hasMine && isUncovered) ? numMinesAround : ''}

@@ -3,43 +3,47 @@ import { InjectMineEnum } from '../constants/gameConstants';
 import { BoardActions } from '../actions/BoardActions';
 import { referenceToAdjacentCells } from '../utility/utility';
 
-export function boardReducer (state, action) {
-  switch(action.type) {
+export function boardReducer (state, { type, payload }) {
+  switch(type) {
     case BoardActions.INITIATE_BOARD:
       return {
         ...state,
-        minesLeft: action.payload.level.num_mine,
+        minesLeft: payload.level.num_mine,
         gameOver: false,
-        board: resetBoard(action.payload.level)
+        gameClear: false,
+        board: resetBoard(payload.level)
       };
     
     case BoardActions.UNCOVER_CELL:
       return {
         ...state,
-        board: uncoverCell(state.board, action.payload.row, action.payload.column),
+        board: uncoverCell(state.board, payload.row, payload.column),
+        gameClear: didGameClear(state.board, state.minesLeft),
       };
 
     case BoardActions.DOUBLE_CLICK_CELL:
       return {
         ...state,
-        board: uncoverAdjacentCells(state.board, action.payload.row, action.payload.column),
+        board: uncoverAdjacentCells(state.board, payload.row, payload.column),
+        gameClear: didGameClear(state.board, state.minesLeft),
       };
 
     case BoardActions.RIGHT_CLICK_CELL:
       return {
         ...state,
-        minesLeft: state.board[action.payload.row][action.payload.column].flagged ? 
-                   state.minesLeft + 1: state.minesLeft - 1,
-        board: toggleFlagCell(state.board, action.payload.row, action.payload.column),
+        minesLeft: minesLeft(state.board, payload.row, payload.column, state.minesLeft),
+        board: toggleFlagCell(state.board, payload.row, payload.column),
+        //hmm....
+        gameClear: didGameClear(state.board, minesLeft(state.board, payload.row, payload.column, state.minesLeft)),
       };
 
     case BoardActions.CHANGE_LEVEL:
       return {
         ...state,
         gameOver: false,
-        level: action.payload.level,
-        minesLeft: action.payload.level.num_mine,
-        board: resetBoard(action.payload.level),
+        level: payload.level,
+        minesLeft: payload.level.num_mine,
+        board: resetBoard(payload.level),
       };
     
     case BoardActions.GAME_OVER:
@@ -118,11 +122,15 @@ function resetBoard(level) {
   return populateNumber(boardWithMines);
 }
 
+function minesLeft(board, row, column, minesLeft) {
+  return board[row][column].flagged ? minesLeft + 1: minesLeft - 1
+}
+
 function uncoverCell(originalBoard, row, column) {
   const newBoard = JSON.parse(JSON.stringify(originalBoard));
   newBoard[row][column].isUncovered = true;
   if(newBoard[row][column].numMinesAround === 0 && !newBoard[row][column].hasMine) {
-    return uncoverAdjacentCells(originalBoard, row, column);
+    return uncoverAdjacentCells(newBoard, row, column);
   }
   return newBoard;
 }
@@ -154,6 +162,7 @@ function uncoverAdjacentCells(originalBoard, row, column) {
       else {
         memo[`${cell.row}-${cell.column}`] = true;
       }
+
       cell.cell.isUncovered = cell.cell.flagged ? false : true;
 
       if(cell.cell && !cell.cell.numMinesAround && !cell.cell.hasMine) {
@@ -164,3 +173,23 @@ function uncoverAdjacentCells(originalBoard, row, column) {
 
   return originalBoard;
 };
+
+function didGameClear(board, minesLeft) {
+  if(minesLeft === 0) {
+    for(let i=0; i < board.length; i++) {
+      for(let j=0; j < board[0].length; j++) {
+        if(!board[i][j].hasMine && !board[i][j].isUncovered) {
+          console.log('here4');
+          return false;
+        }
+
+        if(!board[i][j].hasMine && board[i][j].flagged) {
+          console.log('here2');
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  return false;
+}
