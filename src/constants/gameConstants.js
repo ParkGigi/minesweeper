@@ -26,6 +26,7 @@ export const GameInitialState = {
   level: GameLevel.INTERMEDIATE,
   gameOver: false,
   minesLeft: GameLevel.INTERMEDIATE.num_mine,
+  gameClear: false,
 };
 
 export const InjectMineEnum = Object.freeze({

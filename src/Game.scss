@@ -1,7 +1,45 @@
-.game {
-  position: relative;
-  width: fit-content;
+.game_container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
   margin: 20px auto;
+}
+
+.gameClear {
+  position: absolute;
+  font-size: 50px;
+  z-index: 1;
+  width: fit-content;
+  color: black;
+  font-weight: 600;
+  animation-name: glideAcross;
+  animation-duration: 5s;
+  top: 100px;
+  left: 0;
+  background: yellow;
+  padding: 3px 10px;
+  animation-iteration-count: infinite;
+  transition-timing-function: ease-in;
+}
+
+@keyframes glideAcross {
+  0% {
+    left: 0;
+  }
+
+  50% {
+    left: calc(100% - 7em);
+  }
+
+  100% {
+    left: 0;
+  }
+}
+
+.game{
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
   background-color: #c4c4c4;
   border-left: 2px solid rgb(128, 128, 128);
   border-top: 2px solid gray;
