@@ -1,6 +1,7 @@
 import { InjectMineEnum } from '../constants/gameConstants';
 
 import { BoardActions } from '../actions/BoardActions';
+import { doSomethingToAdjacentCells, referenceToAdjacentCells } from '../utility/utility';
 
 export function boardReducer (state, action) {
   switch(action.type) {
@@ -93,52 +94,18 @@ function populateMines(emptyBoard, numMine) {
 function populateNumber(prevBoard) {
   for(let i=0; i <prevBoard.length; i++) {
     for(let j=0; j<prevBoard[i].length; j++) {
-      let placesToCheck = ['topLeft', 'top', 'topRight', 'left', 'right', 'bottomLeft', 'bottom', 'bottomRight'];
-      
-      if(i === 0) {
-        placesToCheck = getRidOf(placesToCheck, ['topLeft', 'top', 'topRight']);
-      }
-      
-      if(j === 0) { 
-        placesToCheck = getRidOf(placesToCheck, ['topLeft', 'left', 'bottomLeft']);
-      }
+      const adjacentCells = referenceToAdjacentCells(prevBoard, i, j);
+      let minesAround = 0;
+      adjacentCells.forEach(({cell, row, column}) => {
+        if(cell.hasMine) minesAround++;
+      })
 
-      if(i === prevBoard.length - 1) {
-        placesToCheck = getRidOf(placesToCheck, ['bottomLeft', 'bottom', 'bottomRight']);
-      }
-
-      if(j === prevBoard[i].length - 1) {
-        placesToCheck = getRidOf(placesToCheck, ['topRight', 'right', 'bottomRight']);
-      }
-
-      let numberOfMinesAroundCell = 0;
-      
-      for(let k=0; k < placesToCheck.length; k++) {
-        const currentPosition = placesToCheck[k];
-        
-        if ((currentPosition === 'topLeft' && prevBoard[i - 1][j - 1].hasMine) ||
-            (currentPosition === 'top' && prevBoard[i -1][j].hasMine) ||
-            (currentPosition === 'topRight' && prevBoard[i - 1][j + 1].hasMine) ||
-            (currentPosition === 'left' && prevBoard[i][j-1].hasMine) ||
-            (currentPosition === 'right' && prevBoard[i][j+1].hasMine) ||
-            (currentPosition === 'bottomLeft' && prevBoard[i+1][j-1].hasMine) ||
-            (currentPosition === 'bottom' && prevBoard[i+1][j].hasMine) ||
-            (currentPosition === 'bottomRight' && prevBoard[i+1][j+1].hasMine)
-        ) {
-          numberOfMinesAroundCell++;
-        }
-      }
-
-      prevBoard[i][j].numMinesAround = numberOfMinesAroundCell;
+      prevBoard[i][j].numMinesAround = minesAround;
     }
   }
-
+  console.log('prevBoard: ', prevBoard);
   return prevBoard;
-
-  function getRidOf(originalArray, toEraseArray) {
-    return originalArray.filter(element => !toEraseArray.includes(element));
-  }
-}
+};
 
 function restartGame(level) {
   let emptyBoard = initiateEmptyBoard(level);
@@ -158,38 +125,27 @@ function toggleFlagCell(originalBoard, row, column) {
   return newBoard
 }
 
-function uncoverAdjacentCells(originalBoard, row, column) {
-  const newBoard = JSON.parse(JSON.stringify(originalBoard));
-  
-  function ifNotFlaggedUncover(cell) {
-    cell.isUncovered = cell.flagged ? false : true;
-  }
+function uncoverAdjacentCells(originalBoard, row, column) {  
+  //const surroundingCells = referenceToAdjacentCells(originalBoard, row, column);
+  const memo = {};
+  const stack = [{ cell: originalBoard[row][column], row, column }];
 
-  if (row > 0) {
-    // cell above
-    ifNotFlaggedUncover(newBoard[row - 1][column]);
-
-    // cell topLeft
-    if (column > 0) ifNotFlaggedUncover(newBoard[row - 1][column - 1]);
-    // cell topRight
-    if (column < newBoard[0].length - 1) ifNotFlaggedUncover(newBoard[row - 1][column + 1]);
-
-  }
-
-  // cell left
-  if (column > 0) ifNotFlaggedUncover(newBoard[row][column - 1]);
-  // cell right
-  if (column < originalBoard[0].length - 1) ifNotFlaggedUncover(newBoard[row][column + 1]);
-
-  if (row < newBoard.length - 1) {
-    // cell below
-    ifNotFlaggedUncover(newBoard[row + 1][column]);
+  while(stack.length > 0) {
+    const centerCell = stack.pop();
+    const surroundingCells = referenceToAdjacentCells(originalBoard, centerCell.row, centerCell.column);
     
-    // cell bottom Left
-    if (column > 0) ifNotFlaggedUncover(newBoard[row + 1][column - 1])
-    // cell bottomRight
-    if (column < newBoard[0].length - 1) ifNotFlaggedUncover(newBoard[row + 1][column + 1]);
+    for(let cell of surroundingCells) {
+      if(memo[`${cell.row}-${cell.column}`]) continue;
+      else {
+        memo[`${cell.row}-${cell.column}`] = true;
+      }
+      cell.cell.isUncovered = cell.cell.flagged ? false : true;
+
+      if(cell.cell && !cell.cell.numMinesAround && !cell.cell.hasMine) {
+        stack.push(cell);
+      }
+    }
   }
 
-  return newBoard;
-}
+  return originalBoard;
+};
