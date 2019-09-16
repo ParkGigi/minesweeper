@@ -26,6 +26,10 @@ export function Board() {
         }
       }>
         {
+            state.gameOver ? 
+            <div className="gameOver">GAME OVER</div> : ''
+          }
+        {
           state.board.map((row, i) => 
             row.map((cell, j) => <Cell 
               cellInfo={

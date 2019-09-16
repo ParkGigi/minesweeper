@@ -15,8 +15,8 @@ export const GameLevel = Object.freeze({
 
   EXPERT: {
     name: 'EXPERT',
-    rows: 26,
-    columns: 20,
+    rows: 23,
+    columns: 23,
     num_mine: 99,
   }
 })
@@ -24,7 +24,8 @@ export const GameLevel = Object.freeze({
 export const GameInitialState = {
   board: [],
   level: GameLevel.INTERMEDIATE,
-  gameOver: false
+  gameOver: false,
+  minesLeft: GameLevel.INTERMEDIATE.num_mine,
 };
 
 export const InjectMineEnum = Object.freeze({
