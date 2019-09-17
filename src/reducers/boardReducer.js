@@ -6,14 +6,24 @@ import { referenceToAdjacentCells } from '../utility/utility';
 export function boardReducer (state, { type, payload }) {
   switch(type) {
     case BoardActions.INITIATE_BOARD:
+      console.log('initiate board');
       return {
         ...state,
         minesLeft: payload.level.num_mine,
         gameOver: false,
         gameClear: false,
-        board: resetBoard(payload.level)
+        board: resetBoard(payload.level),
+        clickNumber: 1,
       };
     
+    case BoardActions.INITIATE_DUMMY_BOARD:
+      console.log('initiate dummy');
+      return {
+        ...state,
+        clickNumber: 0,
+        board: initiateEmptyBoard(state.level),
+      }
+
     case BoardActions.UNCOVER_CELL:
       return {
         ...state,
