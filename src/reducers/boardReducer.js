@@ -1,19 +1,28 @@
 import { InjectMineEnum } from '../constants/gameConstants';
 
 import { BoardActions } from '../actions/BoardActions';
-import { referenceToAdjacentCells } from '../utility/utility';
+import { referenceToAdjacentCells, getSurroundingCellIndex } from '../utility/utility';
 
 export function boardReducer (state, { type, payload }) {
   switch(type) {
+    case BoardActions.INITIATE_DUMMY_BOARD:
+      return {
+        ...state,
+        gameOver: false,
+        gameClear: false,
+        clickNumber: 0,
+        minesLeft: state.level.num_mine,
+        board: initiateEmptyBoard(state.level),
+      };
+
     case BoardActions.INITIATE_BOARD:
       return {
         ...state,
         minesLeft: payload.level.num_mine,
-        gameOver: false,
-        gameClear: false,
-        board: resetBoard(payload.level)
+        board: resetBoard(payload.level, payload.row, payload.column),
+        clickNumber: 1,
       };
-    
+
     case BoardActions.UNCOVER_CELL:
       return {
         ...state,
@@ -57,7 +66,7 @@ export function boardReducer (state, { type, payload }) {
   }
 }
 
-function initiateEmptyBoard({ rows, columns, num_mine }) {
+function initiateEmptyBoard({ rows, columns }) {
   return Array.from(
     Array(rows), () =>
     new Array(columns).fill({
@@ -69,14 +78,26 @@ function initiateEmptyBoard({ rows, columns, num_mine }) {
     );
 }
 
-function populateMines(emptyBoard, numMine) {
+function populateMines(emptyBoard, numMine, row, column) {
   let numInjectedMines = 0;
   let tempBoard = JSON.parse(JSON.stringify(emptyBoard));
 
   let rowIndex = 0;
 
+  const indexAroundClickedCell= getSurroundingCellIndex(row, column).map(index => JSON.stringify(index));
+  console.log('indexAroundClickedCell: ', indexAroundClickedCell);
+
+
   while(numInjectedMines < numMine) {
     for(let i=0; i < emptyBoard[rowIndex].length; i++) {
+      if(rowIndex === row && i === column) {
+        continue;
+      }
+
+      if(indexAroundClickedCell.includes(JSON.stringify([rowIndex, i]))) {
+        continue;
+      }
+
       if(numInjectedMines === numMine) {
         break;
       }
@@ -116,10 +137,10 @@ function populateNumber(prevBoard) {
   return prevBoard;
 };
 
-function resetBoard(level) {
+function resetBoard(level, row, column) {
   let emptyBoard = initiateEmptyBoard(level);
-  let boardWithMines = populateMines(emptyBoard, level.num_mine);
-  return populateNumber(boardWithMines);
+  let boardWithMines = populateMines(emptyBoard, level.num_mine, row, column);
+  return populateNumber(boardWithMines, row, column);
 }
 
 function minesLeft(board, row, column, minesLeft) {

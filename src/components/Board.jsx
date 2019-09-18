@@ -13,7 +13,7 @@ export function Board() {
   const dispatch = useContext(dispatchContext);
   
   useEffect(() => {
-    dispatch({ type: BoardActions.INITIATE_BOARD, payload: { level: GameLevel.INTERMEDIATE } });
+    dispatch({ type: BoardActions.INITIATE_DUMMY_BOARD, payload: { level: GameLevel.INTERMEDIATE } });
   }, [dispatch])
 
   return(

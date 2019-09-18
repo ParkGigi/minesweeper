@@ -15,7 +15,7 @@ function Game() {
   const [state, dispatch] = useReducer(boardReducer, GameInitialState);
 
   function onResetClick() {
-    dispatch({ type: BoardActions.INITIATE_BOARD, payload: { level: state.level } });
+    dispatch({ type: BoardActions.INITIATE_DUMMY_BOARD, payload: { level: state.level } });
   }
 
   function onLevelSelect(event) {

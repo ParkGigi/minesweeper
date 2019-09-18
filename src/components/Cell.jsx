@@ -7,7 +7,7 @@ import './Cell.scss';
 
 export function Cell(props) {
   const dispatch = useContext(dispatchContext);
-  const { gameOver } = useContext(stateContext);
+  const { gameOver, level, clickNumber } = useContext(stateContext);
   let { hasMine, isUncovered, numMinesAround, row, column, flagged } = props.cellInfo;
   
   useEffect(() => {
@@ -16,6 +16,9 @@ export function Cell(props) {
 
   function onCellClick() {
     if (flagged || gameOver) return;
+    if (clickNumber === 0) {
+      dispatch({ type: BoardActions.INITIATE_BOARD, payload: { level, row, column } });
+    }
     dispatch({ type: BoardActions.UNCOVER_CELL, payload: { row, column } });
   }
 
