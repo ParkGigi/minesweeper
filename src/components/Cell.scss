@@ -72,9 +72,9 @@
   .cell_content.flagged {
     background-image: url('../assets/img/X.png');
 
-    &.mine {
-      background-image: none;
-    }
+    // &.mine {
+    //   background-image: none;
+    // }
   }
 
   &.noHover:hover {
