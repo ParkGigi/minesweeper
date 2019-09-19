@@ -50,13 +50,13 @@
     background-image: url('../assets/img/mine.png');
   }
 
-  .flagged {
-    background-image: url('../assets/img/fire.png');
-  }
-
   &.uncovered {
     border: 0.5px solid gray;
     background-color: #eee;
+    
+    .mine {
+      background-image: url('../assets/img/fire.png');
+    }
   }
 
   &:hover {
@@ -66,6 +66,19 @@
 
     &.uncovered {
       background-color: #eee;
+    }
+  }
+
+  .cell_content.flagged {
+    color: red;
+    font-weight: 600;
+
+    &.mine {
+      background-image: none;
+    }
+
+    &:hover {
+      cursor: default; 
     }
   }
 }

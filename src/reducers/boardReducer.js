@@ -19,7 +19,7 @@ export function boardReducer (state, { type, payload }) {
       return {
         ...state,
         minesLeft: payload.level.num_mine,
-        board: resetBoard(payload.level, payload.row, payload.column),
+        board: resetBoard(state.board, payload.level, payload.row, payload.column),
         clickNumber: 1,
       };
 
@@ -53,7 +53,7 @@ export function boardReducer (state, { type, payload }) {
         clickNumber: 0,
         level: payload.level,
         minesLeft: payload.level.num_mine,
-        board: resetBoard(payload.level),
+        board: initiateEmptyBoard(payload.level),
       };
     
     case BoardActions.GAME_OVER:
@@ -135,9 +135,8 @@ function populateNumber(prevBoard) {
   return prevBoard;
 };
 
-function resetBoard(level, row, column) {
-  let emptyBoard = initiateEmptyBoard(level);
-  let boardWithMines = populateMines(emptyBoard, level.num_mine, row, column);
+function resetBoard(board, level, row, column) {
+  let boardWithMines = populateMines(board, level.num_mine, row, column);
   return populateNumber(boardWithMines, row, column);
 }
 

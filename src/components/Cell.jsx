@@ -48,6 +48,7 @@ export function Cell(props) {
           ${(hasMine && isUncovered) || (hasMine && gameOver) ? 'mine' : ''} 
           ${flagged ? 'flagged' : ''}`}
       >
+      {flagged ? 'X' : ''}
       {(numMinesAround && !hasMine && isUncovered) ? numMinesAround : ''}
       </div>
     </div>
