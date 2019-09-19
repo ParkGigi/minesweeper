@@ -1,6 +1,6 @@
 # Welcome to Minesweeper!
 
-![Screenshot of Minesweeper](./src/assets/img/screenshot.png);
+![Screenshot of Minesweeper](./src/assets/img/screenshot.png)
 
 ## To get minesweepin'
 
@@ -10,10 +10,10 @@ Head over to [http://localhost:3000](http://localhost:3000) to enjoy!
 
 ## Instructions
 
-### The number on the top left corner of the game is the number of bombs left minus the flags used.
+* The number on the top left corner of the game is the number of bombs left minus the flags used.
 
-### Right click to flag a cell
+* Right click to flag a cell
 
-### Double click on a cell to open all surrounding cells of a center cell
+* Double click on a cell to open all surrounding cells of a center cell
 
 However, it will open up only when the number of flagged cells and the number indicated in the center cell matches.
