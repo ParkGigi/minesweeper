@@ -50,13 +50,13 @@
     background-image: url('../assets/img/mine.png');
   }
 
-  .flagged {
-    background-image: url('../assets/img/fire.png');
-  }
-
   &.uncovered {
     border: 0.5px solid gray;
     background-color: #eee;
+    
+    .mine {
+      background-image: url('../assets/img/fire.png');
+    }
   }
 
   &:hover {
@@ -67,5 +67,22 @@
     &.uncovered {
       background-color: #eee;
     }
+  }
+
+  .cell_content.flagged {
+    background-image: url('../assets/img/X.png');
+
+    &.mine {
+      background-image: none;
+    }
+  }
+
+  &.noHover:hover {
+    cursor: default; 
+    background-color: #c4c4c4;
+    border-top: 2px solid #f2f2f2;
+    border-left: 2px solid #f2f2f2;
+    border-right: 2px solid gray;
+    border-bottom: 2px solid gray;
   }
 }

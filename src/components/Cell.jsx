@@ -37,7 +37,7 @@ export function Cell(props) {
 
   return(
     <div 
-      className={`cell ${isUncovered ? 'uncovered' : ''}`}
+      className={`cell ${isUncovered ? 'uncovered' : ''} ${flagged ? 'noHover': ''}`}
       onClick={onCellClick}
       onDoubleClick={onCellDoubleClick}
       onContextMenu={(e) => onCellRightClick(e)}
