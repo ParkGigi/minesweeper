@@ -27,14 +27,14 @@ export function boardReducer (state, { type, payload }) {
       return {
         ...state,
         board: uncoverCell(state.board, payload.row, payload.column),
-        gameClear: didGameClear(state.board, state.minesLeft),
+        gameClear: didGameClear(uncoverCell(state.board, payload.row, payload.column)),
       };
 
     case BoardActions.DOUBLE_CLICK_CELL:
       return {
         ...state,
         board: uncoverAdjacentCells(state.board, payload.row, payload.column),
-        gameClear: didGameClear(state.board, state.minesLeft),
+        gameClear: didGameClear(uncoverAdjacentCells(state.board, payload.row, payload.column)),
       };
 
     case BoardActions.RIGHT_CLICK_CELL:
@@ -42,14 +42,15 @@ export function boardReducer (state, { type, payload }) {
         ...state,
         minesLeft: minesLeft(state.board, payload.row, payload.column, state.minesLeft),
         board: toggleFlagCell(state.board, payload.row, payload.column),
-        //hmm....
-        gameClear: didGameClear(state.board, minesLeft(state.board, payload.row, payload.column, state.minesLeft)),
+        gameClear: didGameClear(toggleFlagCell(state.board, payload.row, payload.column)),
       };
 
     case BoardActions.CHANGE_LEVEL:
       return {
         ...state,
         gameOver: false,
+        gameClear: false,
+        clickNumber: 0,
         level: payload.level,
         minesLeft: payload.level.num_mine,
         board: resetBoard(payload.level),
@@ -85,8 +86,6 @@ function populateMines(emptyBoard, numMine, row, column) {
   let rowIndex = 0;
 
   const indexAroundClickedCell= getSurroundingCellIndex(row, column).map(index => JSON.stringify(index));
-  console.log('indexAroundClickedCell: ', indexAroundClickedCell);
-
 
   while(numInjectedMines < numMine) {
     for(let i=0; i < emptyBoard[rowIndex].length; i++) {
@@ -133,7 +132,6 @@ function populateNumber(prevBoard) {
       prevBoard[i][j].numMinesAround = minesAround;
     }
   }
-  console.log(prevBoard);
   return prevBoard;
 };
 
@@ -195,22 +193,17 @@ function uncoverAdjacentCells(originalBoard, row, column) {
   return originalBoard;
 };
 
-function didGameClear(board, minesLeft) {
-  if(minesLeft === 0) {
-    for(let i=0; i < board.length; i++) {
-      for(let j=0; j < board[0].length; j++) {
-        if(!board[i][j].hasMine && !board[i][j].isUncovered) {
-          console.log('here4');
-          return false;
-        }
+function didGameClear(board) {
+  for(let i=0; i < board.length; i++) {
+    for(let j=0; j < board[0].length; j++) {
+      if(!board[i][j].hasMine && !board[i][j].isUncovered) {
+        return false;
+      }
 
-        if(!board[i][j].hasMine && board[i][j].flagged) {
-          console.log('here2');
-          return false;
-        }
+      if(!board[i][j].hasMine && board[i][j].flagged) {
+        return false;
       }
     }
-    return true;
   }
-  return false;
+  return true;
 }
