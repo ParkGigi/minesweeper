@@ -1,4 +1,6 @@
 import React, { useReducer } from 'react';
+
+import '@fortawesome/fontawesome-free/js/all.js';
 import './Game.scss';
 
 import { Board } from './components/Board';
@@ -44,7 +46,17 @@ function Game() {
               </select>
             </div>
             <Board />
-          </div>  
+          </div>
+          <div className="credentials">
+            <a className="github"
+               href="https://github.com/RebeccaPark/minesweeper">
+              <div className="fab fa-github"/>
+            </a>
+            <a className="twitter"
+               href="https://twitter.com/RebeccaJYPark">
+              <div className="fab fa-twitter"/>
+            </a>
+          </div>
         </div>
       </dispatchContext.Provider>
     </stateContext.Provider>

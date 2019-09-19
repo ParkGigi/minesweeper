@@ -1,6 +1,7 @@
 .game_container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   margin: 20px auto;
 }
@@ -114,4 +115,21 @@
   font-weight: bold;
   width: 100%;
   text-align: center;  
+}
+
+.credentials {
+  color: #9b9b9b;
+  margin-top: 10px;
+  
+  .github, .twitter {
+    padding: 5px;
+  }
+
+  a:visited {
+    color: #9b9b9b;
+  }
+
+  a:hover {
+    color: #666;
+  }
 }
