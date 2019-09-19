@@ -37,7 +37,7 @@ export function Cell(props) {
 
   return(
     <div 
-      className={`cell ${isUncovered ? 'uncovered' : ''}`}
+      className={`cell ${isUncovered ? 'uncovered' : ''} ${flagged ? 'noHover': ''}`}
       onClick={onCellClick}
       onDoubleClick={onCellDoubleClick}
       onContextMenu={(e) => onCellRightClick(e)}
@@ -48,7 +48,6 @@ export function Cell(props) {
           ${(hasMine && isUncovered) || (hasMine && gameOver) ? 'mine' : ''} 
           ${flagged ? 'flagged' : ''}`}
       >
-      {flagged ? 'X' : ''}
       {(numMinesAround && !hasMine && isUncovered) ? numMinesAround : ''}
       </div>
     </div>
